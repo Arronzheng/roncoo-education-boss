@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["APb2"],{APb2:function(e,t,i){"use strict";i.r(t);var n=function(){var e=this.$createElement;return(this._self._c||e)("router-view")};n._withStripped=!0;var s=i("KHd+"),r=Object(s.a)({},n,[],!1,null,null,null);r.options.__file="src\\views\\sys\\website\\index.vue";t.default=r.exports}}]);

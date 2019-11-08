@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["4poe"],{"4poe":function(e,t,n){"use strict";n.r(t);var s=function(){var e=this.$createElement;return(this._self._c||e)("router-view")};s._withStripped=!0;var i=n("KHd+"),r=Object(i.a)({},s,[],!1,null,null,null);r.options.__file="src\\views\\sys\\msg\\index.vue";t.default=r.exports}}]);

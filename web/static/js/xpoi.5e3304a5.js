@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["xpoi"],{xpoi:function(e,t,i){"use strict";i.r(t);var n=function(){var e=this.$createElement;return(this._self._c||e)("router-view")};n._withStripped=!0;var r=i("KHd+"),o=Object(r.a)({},n,[],!1,null,null,null);o.options.__file="src\\views\\lecturer\\index.vue";t.default=o.exports}}]);

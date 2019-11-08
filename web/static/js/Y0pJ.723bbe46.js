@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["Y0pJ"],{Y0pJ:function(e,t,n){"use strict";n.r(t);var r=function(){var e=this.$createElement;return(this._self._c||e)("router-view")};r._withStripped=!0;var i=n("KHd+"),s=Object(i.a)({},r,[],!1,null,null,null);s.options.__file="src\\views\\order\\index.vue";t.default=s.exports}}]);

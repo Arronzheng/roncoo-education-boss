@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["Uwyq"],{Uwyq:function(e,t,r){"use strict";r.r(t);var n=function(){var e=this.$createElement;return(this._self._c||e)("router-view")};n._withStripped=!0;var i=r("KHd+"),u=Object(i.a)({},n,[],!1,null,null,null);u.options.__file="src\\views\\lecturer\\lecturer\\index.vue";t.default=u.exports}}]);
