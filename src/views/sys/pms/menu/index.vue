@@ -134,7 +134,7 @@
         })
       },
       addSubMmenu(row) {
-        this.parentId = row
+        this.parentId = row.toString()
         this.ctrl.dialogTitle = "添加"
         this.ctrl.addDialogVisible = true
       },
