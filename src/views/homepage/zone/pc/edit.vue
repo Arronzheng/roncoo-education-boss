@@ -74,13 +74,6 @@
               });
               return false
             }
-            if (!this.formData.zoneName) {
-              this.$message({
-                type: 'error',
-                message: '请输入专区名称'
-              });
-              return false
-            }
             this.loading.show()
             if (this.formData.id === undefined) {
               api.pcZoneSave(this.formData).then(res => {

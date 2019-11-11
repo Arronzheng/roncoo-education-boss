@@ -77,7 +77,7 @@ export const asyncRouterMap = [
           {
             path: 'websiteNavArticle',
             component: () => import('@/views/homepage/website/websiteNavArticle'),
-            meta: { requireAuth: true }
+            meta: { title: '文章管理', requireAuth: true }
           }
         ]
       }
@@ -96,6 +96,16 @@ export const asyncRouterMap = [
             path: 'course',
             component: () => import('@/views/course/course/course'),
             meta: { requireAuth: true }
+          },
+          {// 章节列表
+            path: 'chapter',
+            component: () => import('@/views/course/course/chapter'),
+            meta: { title: '章节管理', requireAuth: true }
+          },
+          {// 课时列表
+            path: 'period',
+            component: () => import('@/views/course/course/period'),
+            meta: { title: '课时管理', requireAuth: true }
           },
           {
             // 课程审核列表

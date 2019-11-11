@@ -134,3 +134,70 @@ export function categoryView(data = {}) {
     data: data
   })
 }
+
+// 课程章节分页列表接口
+export function courseChapterList(params, pageCurrent = 1, pageSize = 20) {
+  return request({
+    url: '/course/pc/course/chapter/list',
+    method: 'post',
+    data: { pageCurrent: pageCurrent, pageSize: pageSize, ...params }
+  })
+}
+
+// 更新课程章节信息
+export function courseChapterUpdate(data = {}) {
+  return request({
+    url: '/course/pc/course/chapter/update',
+    method: 'post',
+    data: data
+  })
+}
+
+// 删除课程章节信息
+export function courseChapterDelete(data = {}) {
+  return request({
+    url: '/course/pc/course/chapter/delete',
+    method: 'post',
+    data: data
+  })
+}
+// 保存课程章节信息
+export function courseChapterSave(data = {}) {
+  return request({
+    url: '/course/pc/course/chapter/save',
+    method: 'post',
+    data: data
+  })
+}
+//课时分页列表接口
+export function chapterPeriodList(data = {}) {
+  return request({
+    url: '/course/pc/course/period/list',
+    method: 'post',
+    data: data
+  })
+}
+//课时更新接口
+export function chapterPeriodUpdate(data = {}) {
+  return request({
+    url: '/course/pc/course/period/update',
+    method: 'post',
+    data: data
+  })
+}
+//课时删除接口
+export function chapterPeriodDelete(data = {}) {
+  return request({
+    url: '/course/pc/course/period/delete',
+    method: 'post',
+    data: data
+  })
+}
+//课时保存接口
+export function chapterPeriodSave(data = {}) {
+  return request({
+    url: '/course/pc/course/period/save',
+    method: 'post',
+    data: data
+  })
+}

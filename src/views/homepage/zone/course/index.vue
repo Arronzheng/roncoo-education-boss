@@ -226,6 +226,7 @@
       },
       //编辑
       handleUpdateRow(data) {
+          console.log(data)
        this.formData = data
        this.ctrl.dialogTitle = data.courseName + '——编辑'
        this.ctrl.editDialogVisible = true

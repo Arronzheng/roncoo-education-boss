@@ -117,7 +117,7 @@
       <el-table-column label="操作" width="250">
         <template slot-scope="scope">
           <el-button v-has="'/course/pc/course/get'" type="success" @click="handleEdit(scope.row.id)" size="mini">修改</el-button>
-          <el-button v-has="'/course/pc/course/get'" type="primary" @click="handleEdit(scope.row.id)" size="mini">课时管理</el-button>
+          <el-button v-has="'/course/pc/course/get'" type="primary" @click="handleChapter(scope.row.id,scope.row.courseName)" size="mini">章节管理</el-button>
           <el-button v-has="'/course/pc/course/get'" type="danger" @click="handleEdit(scope.row.id)" size="mini">删除</el-button>
         </template>
       </el-table-column>
@@ -319,6 +319,10 @@ export default {
       }).catch(() => {
         this.ctrl.load = false
       })
+    },
+    //章节管理
+    handleChapter(id, name) {
+      this.$router.push({ path: '/course/course/chapter', query: { courseId: id, courseName: name }});
     },
     // 修改弹窗
     handleEdit(row) {
