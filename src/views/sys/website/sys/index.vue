@@ -7,7 +7,7 @@
           <el-form-item label="视频存储平台:">
             <el-radio-group v-model="formData.videoType">
               <el-radio :label="1">保利威视</el-radio>
-              <el-radio :label="0">七牛</el-radio>
+              <el-radio :label="0">腾讯</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-row>
@@ -40,6 +40,7 @@
               <el-radio-group v-model="formData.fileType">
                 <el-radio :label="1">阿里云</el-radio>
                 <el-radio :label="2">七牛</el-radio>
+                <el-radio :label="4">腾讯</el-radio>
                 <el-radio :label="3">本地</el-radio>
               </el-radio-group>
             </el-form-item>
@@ -79,12 +80,19 @@
                 </el-form-item>
               </div></el-col>
           </el-row>
+          <el-row v-show="formData.fileType === 4">
+            <el-col :span="11"><div>
+              <el-form-item label="region:">
+                <el-input style="width:450px;" type="password" v-model="formData.aliyunOasVault" placeholder="请输入region"></el-input>
+              </el-form-item>
+            </div></el-col>
+          </el-row>
         <el-alert class="title" :closable="false" title="支付通道信息" type="info" />
           <br/>
           <el-form-item label="支付通道:">
             <el-radio-group v-model="formData.payType">
-              <el-radio :label="1">龙果支付</el-radio>
-              <el-radio :label="0">其他</el-radio>
+              <el-radio :label="1">支付宝支付</el-radio>
+              <el-radio :label="2">微信支付</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-row>
