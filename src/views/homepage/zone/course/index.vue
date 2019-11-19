@@ -53,7 +53,6 @@
         <el-table-column prop="gmtCreate" label="添加时间">
         </el-table-column>
         <el-table-column
-          fixed="right"
           label="操作"
           width="250">
           <template slot-scope="scope">

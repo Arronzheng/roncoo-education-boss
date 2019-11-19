@@ -10,6 +10,24 @@ export function uploadPic(data = {}) {
   })
 }
 
+// 上传文档
+export function uploadDoc(data = {}) {
+  return request({
+    url: `/course/pc/api/upload/doc`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 上传视频
+export function uploadVideo(data = {}) {
+  return request({
+    url: `/course/pc/api/upload/video`,
+    method: 'post',
+    data: data
+  })
+}
+
 // 下载图片
 // export function downPic(params) {
 //   return request({

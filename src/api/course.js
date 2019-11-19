@@ -28,9 +28,18 @@ export function courseAuditUpdate(data = {}) {
 }
 
 // 审核课程审核接口
-export function courseAudit(data = {}) {
+export function courseAuditAudit(data = {}) {
   return request({
     url: '/course/pc/course/audit/audit',
+    method: 'post',
+    data: data
+  })
+}
+
+// 课程审核保存接口
+export function courseAuditSave(data = {}) {
+  return request({
+    url: '/course/pc/course/audit/save',
     method: 'post',
     data: data
   })
@@ -76,6 +85,15 @@ export function courseView(id) {
 export function courseViewForEdit(data = {}) {
   return request({
     url: '/course/pc/course/get',
+    method: 'post',
+    data: data
+  })
+}
+
+// 课程删除接口
+export function courseDelete(data = {}) {
+  return request({
+    url: '/course/pc/course/delete',
     method: 'post',
     data: data
   })
@@ -136,67 +154,67 @@ export function categoryView(data = {}) {
 }
 
 // 课程章节分页列表接口
-export function courseChapterList(params, pageCurrent = 1, pageSize = 20) {
+export function courseChapterAuditList(params, pageCurrent = 1, pageSize = 20) {
   return request({
-    url: '/course/pc/course/chapter/list',
+    url: '/course/pc/course/chapter/audit/list',
     method: 'post',
     data: { pageCurrent: pageCurrent, pageSize: pageSize, ...params }
   })
 }
 
 // 更新课程章节信息
-export function courseChapterUpdate(data = {}) {
+export function courseChapterAuditUpdate(data = {}) {
   return request({
-    url: '/course/pc/course/chapter/update',
+    url: '/course/pc/course/chapter/audit/update',
     method: 'post',
     data: data
   })
 }
 
 // 删除课程章节信息
-export function courseChapterDelete(data = {}) {
+export function courseChapterAuditDelete(data = {}) {
   return request({
-    url: '/course/pc/course/chapter/delete',
+    url: '/course/pc/course/chapter/audit/delete',
     method: 'post',
     data: data
   })
 }
 // 保存课程章节信息
-export function courseChapterSave(data = {}) {
+export function courseChapterAuditSave(data = {}) {
   return request({
-    url: '/course/pc/course/chapter/save',
+    url: '/course/pc/course/chapter/audit/save',
     method: 'post',
     data: data
   })
 }
 //课时分页列表接口
-export function chapterPeriodList(data = {}) {
+export function chapterPeriodAuditList(data = {}) {
   return request({
-    url: '/course/pc/course/period/list',
+    url: '/course/pc/course/period/audit/list',
     method: 'post',
     data: data
   })
 }
 //课时更新接口
-export function chapterPeriodUpdate(data = {}) {
+export function chapterPeriodAuditUpdate(data = {}) {
   return request({
-    url: '/course/pc/course/period/update',
+    url: '/course/pc/course/period/audit/update',
     method: 'post',
     data: data
   })
 }
 //课时删除接口
-export function chapterPeriodDelete(data = {}) {
+export function chapterPeriodAuditDelete(data = {}) {
   return request({
-    url: '/course/pc/course/period/delete',
+    url: '/course/pc/course/period/audit/delete',
     method: 'post',
     data: data
   })
 }
 //课时保存接口
-export function chapterPeriodSave(data = {}) {
+export function chapterPeriodAuditSave(data = {}) {
   return request({
-    url: '/course/pc/course/period/save',
+    url: '/course/pc/course/period/audit/save',
     method: 'post',
     data: data
   })

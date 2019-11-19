@@ -9,7 +9,7 @@
         <el-form-item>
           <el-button icon='el-icon-search' type="primary" @click="handleCheck">查询</el-button>
           <el-button icon='el-icon-refresh' class="filter-item" @click="handleReset">重置</el-button>
-          <el-button v-has="'/course/pc/course/list'" type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="handleAddRow()">添加</el-button>
+          <el-button v-has="'/course/pc/course/period/audit/save'" type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="handleAddRow()">添加</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -17,9 +17,9 @@
       <el-table v-loading="ctrl.loading" size="medium" :data="list" stripe border style="width: 100%">
         <el-table-column type="index" label="序号" width="50">
         </el-table-column>
-        <el-table-column prop="chapterName" label="章节名称" width="250">
+        <el-table-column prop="periodName" label="课时名称" width="250">
         </el-table-column>
-        <el-table-column label="章节描述" width="200" prop="chapterDesc">
+        <el-table-column label="课时描述" width="200" prop="periodDesc">
         </el-table-column>
         <el-table-column label="是否免费" width="100" prop="isFree" align="center">
           <template slot-scope="scope">
@@ -46,11 +46,10 @@
           </template>
         </el-table-column>
         <el-table-column prop="sort" label="排序" width="100"></el-table-column>
-        <el-table-column label="操作" width="250">
+        <el-table-column label="操作" width="150">
           <template slot-scope="scope">
-            <el-button type="danger" @click="handleDelRow(scope.row)" size="mini">删除</el-button>
-            <el-button v-has="'/course/pc/course/list'" type="primary" size="mini">课时管理</el-button>
-            <el-button v-has="'/course/pc/zone/course/edit'" type="success" @click="handleUpdateRow(scope.row)" size="mini">修改</el-button>
+            <el-button v-has="'/course/pc/course/period/audit/delete'" type="danger" @click="handleDelRow(scope.row)" size="mini">删除</el-button>
+            <el-button v-has="'/course/pc/course/period/audit/update'" type="success" @click="handleUpdateRow(scope.row)" size="mini">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -65,7 +64,8 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="page.totalCount">
         </el-pagination>
-        <edit :visible="ctrl.dialogVisible" :formData="formData" :chapterId="chapterId" :title="ctrl.dialogTitle" @close-callback="closeCallback"></edit>
+        <edit :visible="ctrl.dialogVisible" :formData="formData" :chapterId="chapterId" :courseId="courseId" :title="ctrl.dialogTitle" @close-callback="closeCallback"></edit>
+        <tags-view ref="myChild" v-show="false"></tags-view>
       </div>
     </div>
   </div>
@@ -74,9 +74,10 @@
 <script>
   import * as api from '@/api/course'
   import Edit from './edit'
+  import TagsView from '@/views/layout/components/TagsView'
     export default {
         name: "Period",
-        components: { Edit },
+        components: { Edit, TagsView },
         data() {
             return {
                 ctrl: {
@@ -84,6 +85,7 @@
                     dialogVisible: false
                 },
                 map: {}, //查询条件
+                courseId: '',
                 chapterId: '',
                 chapterName: '',
                 list: [],
@@ -103,6 +105,7 @@
         },
         mounted() {
           this.map.chapterId = this.$route.query.chapterId
+          this.courseId = this.$route.query.courseId
           this.chapterId = this.$route.query.chapterId
           this.chapterName = this.$route.query.chapterName
           this.getList(this.map)
@@ -110,13 +113,20 @@
         methods: {
             getList(map) {
                 this.ctrl.loading = true
-                this.map.courseId = this.$route.query.courseId
+                this.map.chapterId = this.$route.query.chapterId
                 if (typeof this.map.chapterId === 'undefined') {
                     this.$message.error('错了哦，获取不到课时信息~');
+                    if (this.$store.state.tags.visitedViews) {
+                        for (let i = 0; i < this.$store.state.tags.visitedViews.length; i++) {
+                            if (this.$store.state.tags.visitedViews[i].title === '课时管理') {
+                                this.$refs.myChild.closeSelectedTag(this.$store.state.tags.visitedViews[i])
+                            }
+                        }
+                    }
                     this.ctrl.loading = false
                     return;
                 }
-                api.chapterPeriodList(this.map, this.page.pageCurrent, this.page.pageSize).then(res => {
+                api.chapterPeriodAuditList(this.map, this.page.pageCurrent, this.page.pageSize).then(res => {
                     this.page = res.data
                     this.page.numPerPage = res.data.pageSize
                     this.list = res.data.list
@@ -179,7 +189,7 @@
                         id: data.id
                     }
                     this.ctrl.loading = true
-                    api.chapterPeriodDelete(this.map).then(res => {
+                    api.chapterPeriodAuditDelete(this.map).then(res => {
                         this.ctrl.loading = false
                         if (res.code === 200 && res.data > 0) {
                             this.$message({
@@ -214,7 +224,7 @@
             },
             //改变状态
             changeStatus(id, statusId) {
-                api.chapterPeriodUpdate({ id, statusId }).then(res => {
+                api.chapterPeriodAuditUpdate({ id, statusId }).then(res => {
                     this.ctrl.loading = false
                     if (res.code === 200 && res.data > 0) {
                         const msg = { 0: '禁用成功', 1: '启用成功' }

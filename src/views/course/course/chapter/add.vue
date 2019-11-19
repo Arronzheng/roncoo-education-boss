@@ -77,7 +77,7 @@
                         this.loading.show()
                         if (this.formData.id === undefined) {
                             this.formData.courseId = this.courseId
-                            api.courseChapterSave(this.formData).then(res => {
+                            api.courseChapterAuditSave(this.formData).then(res => {
                                 this.loading.hide()
                                 if (res.code === 200 && res.data > 0) {
                                     this.$message.success('添加成功')
@@ -93,7 +93,7 @@
                             })
                         } else {
                             // 编辑
-                            api.courseChapterUpdate(this.formData).then(res => {
+                            api.courseChapterAuditUpdate(this.formData).then(res => {
                                 this.loading.hide()
                                 if (res.code === 200 && res.data > 0) {
                                     this.$message.success('修改成功')

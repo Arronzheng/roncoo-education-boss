@@ -10,7 +10,7 @@
         <el-form-item>
           <el-button icon='el-icon-search' type="primary" @click="handleCheck">查询</el-button>
           <el-button icon='el-icon-refresh' class="filter-item" @click="handleReset">重置</el-button>
-          <el-button v-has="'/course/pc/course/list'" type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="handleAddRow()">添加</el-button>
+          <el-button v-has="'/course/pc/course/chapter/audit/save'" type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="handleAddRow()">添加</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -54,9 +54,9 @@
           <template slot-scope="scope">
 <!--            <ul class="list-item-actions">-->
 <!--              <li>-->
-                <el-button type="danger" @click="handleDelRow(scope.row)" size="mini">删除</el-button>
-                <el-button v-has="'/course/pc/course/list'" type="primary" @click="handleChapterPeriod(scope.row.id,scope.row.chapterName)" size="mini">课时管理</el-button>
-                <el-button v-has="'/course/pc/zone/course/edit'" type="success" @click="handleUpdateRow(scope.row)" size="mini">修改</el-button>
+                <el-button v-has="'/course/pc/course/chapter/audit/delete'" type="danger" @click="handleDelRow(scope.row)" size="mini">删除</el-button>
+                <el-button v-has="'/course/pc/course/period/audit/list'" type="primary" @click="handleChapterPeriod(scope.row.id,scope.row.chapterName,courseId)" size="mini">课时管理</el-button>
+                <el-button v-has="'/course/pc/course/chapter/audit/update'" type="success" @click="handleUpdateRow(scope.row)" size="mini">修改</el-button>
 <!--              </li>-->
 <!--            </ul>-->
           </template>
@@ -74,6 +74,7 @@
           :total="page.totalCount">
         </el-pagination>
         <add :visible="ctrl.dialogVisible" :formData="formData" :courseId="courseId" :title="ctrl.dialogTitle" @close-callback="closeCallback"></add>
+        <tags-view ref="myChild" v-show="false"></tags-view>
       </div>
     </div>
   </div>
@@ -83,9 +84,10 @@
   import * as api from '@/api/course'
   import Add from './add'
   import Edit from './edit'
+  import TagsView from '@/views/layout/components/TagsView'
     export default {
         name: "Chapter",
-        components: { Add, Edit },
+        components: { Add, Edit, TagsView },
         data() {
           return {
             ctrl: {
@@ -110,6 +112,7 @@
           }
         },
         mounted() {
+            console.log(this.$route.query.courseName)
             this.map.courseId = this.$route.query.courseId
             this.courseId = this.$route.query.courseId
             this.courseName = this.$route.query.courseName
@@ -141,7 +144,7 @@
                         id: data.id
                     }
                     this.ctrl.loading = true
-                    api.courseChapterDelete(this.map).then(res => {
+                    api.courseChapterAuditDelete(this.map).then(res => {
                         this.ctrl.loading = false
                         if (res.code === 200 && res.data > 0) {
                             this.$message({
@@ -176,7 +179,7 @@
             },
             //改变状态
             changeStatus(id, statusId) {
-                api.courseChapterUpdate({ id, statusId }).then(res => {
+                api.courseChapterAuditUpdate({ id, statusId }).then(res => {
                     this.ctrl.loading = false
                     if (res.code === 200 && res.data > 0) {
                         const msg = { 0: '禁用成功', 1: '启用成功' }
@@ -229,14 +232,22 @@
                 this.reload()
             },
             getList() {
+                // debugger
                 this.ctrl.loading = true
                 this.map.courseId = this.$route.query.courseId
                 if (typeof this.map.courseId === 'undefined') {
                   this.$message.error('错了哦，获取不到章节信息~');
+                  if (this.$store.state.tags.visitedViews) {
+                    for (let i = 0; i < this.$store.state.tags.visitedViews.length; i++) {
+                        if (this.$store.state.tags.visitedViews[i].title === '章节管理') {
+                          this.$refs.myChild.closeSelectedTag(this.$store.state.tags.visitedViews[i])
+                        }
+                    }
+                  }
                   this.ctrl.loading = false
                   return;
                 }
-                api.courseChapterList(this.map, this.page.pageCurrent, this.page.pageSize).then(res => {
+                api.courseChapterAuditList(this.map, this.page.pageCurrent, this.page.pageSize).then(res => {
                     this.page = res.data
                     this.page.numPerPage = res.data.pageSize
                     this.list = res.data.list
@@ -245,8 +256,8 @@
                     this.ctrl.loading = false
                 })
             },
-            handleChapterPeriod(id, name) {
-                this.$router.push({ path: '/course/course/period', query: { chapterId: id, chapterName: name }});
+            handleChapterPeriod(id, name, courseId) {
+                this.$router.push({ path: '/course/course/period', query: { chapterId: id, chapterName: name, courseId: courseId }});
             }
         }
     }

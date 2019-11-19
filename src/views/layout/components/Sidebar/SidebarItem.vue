@@ -70,6 +70,9 @@ export default {
     return {
     }
   },
+  mounted() {
+    console.log(this.item.name);
+  },
   methods: {
     isNotChildren(item) {
       const { children = [] } = item

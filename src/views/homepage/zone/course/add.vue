@@ -46,7 +46,6 @@
           <el-table-column prop="sort" label="排序" width="70">
           </el-table-column>
           <el-table-column
-          fixed="right"
           label="操作"
           width="100">
           <template slot-scope="scope">
@@ -156,7 +155,7 @@
       // 分页列出课程信息
       pageList() {
         this.ctrl.load = true
-        courseApi.courseList(this.map, this.page.pageCurrent, this.page.pageSize).then(res => {
+        courseApi.courseAuditList(this.map, this.page.pageCurrent, this.page.pageSize).then(res => {
           this.list = res.data.list
           this.page.pageCurrent = res.data.pageCurrent
           this.page.totalCount = res.data.totalCount

@@ -38,7 +38,7 @@
         <el-form-item>
           <el-button icon='el-icon-search' type="primary" @click="handleCheck">查询</el-button>
           <el-button icon='el-icon-refresh' class="filter-item" @click="handleReset">重置</el-button>
-          <el-button v-has="'/course/pc/adv/add'" type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAddRow()">添加</el-button>
+
         </el-form-item>
       </el-form>
    </div>
@@ -118,7 +118,7 @@
         <template slot-scope="scope">
           <el-button v-has="'/course/pc/course/get'" type="success" @click="handleEdit(scope.row.id)" size="mini">修改</el-button>
           <el-button v-has="'/course/pc/course/get'" type="primary" @click="handleChapter(scope.row.id,scope.row.courseName)" size="mini">章节管理</el-button>
-          <el-button v-has="'/course/pc/course/get'" type="danger" @click="handleEdit(scope.row.id)" size="mini">删除</el-button>
+          <el-button v-has="'/course/pc/course/get'" type="danger" @click="handleDelRow(scope.row)" size="mini">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -133,16 +133,13 @@
       :total="page.totalCount">
     </el-pagination>
     <edit :visible="ctrl.editVisible" :formData="formData" :title="ctrl.dialogTitle" @close-callback="closeCllback"></edit>
-    <add :visible="ctrl.addDialogVisible" :title="ctrl.dialogTitle" :options="options" :lecturerOptions="lecturerOptions" @close-callback="closeCllback"></add>
   </div>
 </template>
 <script>
 import * as api from '@/api/course'
-import * as apil from '@/api/lecturer'
 import Edit from './edit'
-import Add from './add'
 export default {
-  components: { Edit, Add },
+  components: { Edit },
   data() {
     return {
       ctrl: {
@@ -194,32 +191,6 @@ export default {
     })
   },
   methods: {
-    //新增
-    async handleAddRow() {
-        this.ctrl.dialogTitle = '新增'
-        const categoryTree = this.getCategoryTree();
-        const lecturerList = this.getLecturerList();
-        //并行执行
-        await categoryTree;
-        await lecturerList;
-        this.ctrl.addDialogVisible = true
-    },
-    async getCategoryTree() {
-        await api.listForTree().then(res => {
-            this.ctrl.load = false
-            this.options = res.data.list
-        }).catch(() => {
-            this.ctrl.load = false
-        })
-    },
-    async getLecturerList() {
-      await apil.getLecturerList().then(res => {
-          this.ctrl.load = false
-          this.lecturerOptions = res.data.list
-      }).catch(() => {
-          this.ctrl.load = false
-      })
-    },
     getList() {
       this.ctrl.load = true
       api.courseList(this.map, this.page.pageCurrent, this.page.pageSize).then(res => {
@@ -320,10 +291,6 @@ export default {
         this.ctrl.load = false
       })
     },
-    //章节管理
-    handleChapter(id, name) {
-      this.$router.push({ path: '/course/course/chapter', query: { courseId: id, courseName: name }});
-    },
     // 修改弹窗
     handleEdit(row) {
       this.ctrl.load = true
@@ -335,6 +302,39 @@ export default {
       }).catch(() => {
         this.ctrl.load = false
       })
+    },
+    //章节管理
+    handleChapter(id, name) {
+        this.$router.push({ path: '/course/course/chapter', query: { courseId: id, courseName: name }});
+    },
+    handleDelRow(data) {
+        this.$confirm(`确定删除这条数据?`, '我要删除', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            this.map = {
+                id: data.id
+            }
+            this.ctrl.loading = true
+            api.courseDelete(this.map).then(res => {
+                this.ctrl.loading = false
+                if (res.code === 200 && res.data > 0) {
+                    this.$message({
+                        type: 'success',
+                        message: "删除成功"
+                    });
+                    this.reload()
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: "删除失败"
+                    });
+                }
+            }).catch(() => {
+                this.ctrl.loading = false
+            })
+        })
     },
     textClass(isFree) {
       return {

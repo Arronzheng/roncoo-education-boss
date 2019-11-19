@@ -163,6 +163,7 @@ export default {
                 message: '提交失败',
                 type: 'error'
             });
+            return false
         } else {
             if (!this.courseLogo) {
                 this.$message({
@@ -217,7 +218,7 @@ export default {
             this.loading.show()
             console.log(this.formData)
             // 新增
-            api.courseSave(this.formData).then(res => {
+            api.courseAuditSave(this.formData).then(res => {
                 this.loading.hide()
                 if (res.code === 200 && res.data > 0) {
                     // 提交成功, 关闭窗口, 刷新列表
@@ -240,14 +241,17 @@ export default {
         this.formData.courseLogo = URL.createObjectURL(file.raw);
     },
     handlePost(file) {
-        console.log(file);
-        console.log(this.courseLogo)
         const fd = new FormData();
         fd.append('picFile', file.file)
         fd.append('imgUrl', this.courseLogo)
         //配置post请求的参数。参数名file,后面跟要传的文件，参数名fileType，值为category（看后端的具体要求）
         apia.uploadPic(fd).then(response => {
             this.courseLogo = response.data
+            this.$message({
+                showClose: true,
+                message: '上传成功',
+                type: 'success'
+            });
         }).catch(() => {
             this.$message({
                 showClose: true,

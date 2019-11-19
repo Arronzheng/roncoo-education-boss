@@ -48,6 +48,7 @@
         <el-form-item>
           <el-button icon='el-icon-search' type="primary" @click="handleCheck">查询</el-button>
           <el-button icon='el-icon-refresh' class="filter-item" @click="handleReset">重置</el-button>
+          <el-button v-has="'/course/pc/course/audit/save'" type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAddRow()">添加</el-button>
         </el-form-item>
       </el-form>
    </div>
@@ -127,9 +128,10 @@
           <el-tag v-if="scope.row.auditStatus === 2" type="danger">审核不通过</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="160">
+      <el-table-column label="操作" width="250">
         <template slot-scope="scope">
           <el-button v-has="'/course/pc/course/audit/view'" type="success" @click="handleEdit(scope.row)" size="mini">修改</el-button>
+          <el-button v-has="'/course/pc/course/chapter/audit/list'" type="primary" @click="handleChapter(scope.row.id,scope.row.courseName)" size="mini">章节管理</el-button>
           <el-button v-has="'/course/pc/course/audit/view'" type="primary" @click="handleAudit(scope.row)" size="mini">审核</el-button>
         </template>
       </el-table-column>
@@ -146,20 +148,24 @@
     </el-pagination>
     <audit :visible="ctrl.dialogVisible" :formData="formData" :title="ctrl.dialogTitle" @close-callback="closeCllback"></audit>
     <edit :visible="ctrl.editVisible" :formData="formData" :title="ctrl.dialogTitle" @close-callback="closeCllback"></edit>
+    <add :visible="ctrl.addDialogVisible" :title="ctrl.dialogTitle" :options="options" :lecturerOptions="lecturerOptions" @close-callback="closeCllback"></add>
   </div>
 </template>
 <script>
 import * as api from '@/api/course'
+import * as apil from '@/api/lecturer'
 import Audit from './audit'
 import Edit from './edit'
+import Add from './add'
 export default {
-  components: { Audit, Edit },
+  components: { Audit, Edit, Add },
   data() {
     return {
       ctrl: {
         load: false,
         dialogVisible: false,
-        editVisible: false
+        editVisible: false,
+        addDialogVisible: false
       },
       map: {},
       formData: {},
@@ -177,7 +183,9 @@ export default {
         pageSize: 20,
         totalCount: 0,
         totalPage: 0
-      }
+      },
+      options: [],
+      lecturerOptions: []
     }
   },
   mounted() {
@@ -197,6 +205,32 @@ export default {
     })
   },
   methods: {
+      // 新增
+      async handleAddRow() {
+          this.ctrl.dialogTitle = '新增'
+          const categoryTree = this.getCategoryTree();
+          const lecturerList = this.getLecturerList();
+          //并行执行
+          await categoryTree;
+          await lecturerList;
+          this.ctrl.addDialogVisible = true
+      },
+      async getCategoryTree() {
+          await api.listForTree().then(res => {
+              this.ctrl.load = false
+              this.options = res.data.list
+          }).catch(() => {
+              this.ctrl.load = false
+          })
+      },
+      async getLecturerList() {
+          await apil.getLecturerList().then(res => {
+              this.ctrl.load = false
+              this.lecturerOptions = res.data.list
+          }).catch(() => {
+              this.ctrl.load = false
+          })
+      },
     getList() {
       this.ctrl.load = true
       api.courseAuditList(this.map, this.page.pageCurrent, this.page.pageSize).then(res => {
@@ -211,10 +245,15 @@ export default {
     handleCheck() {
       this.getList()
     },
+    //章节管理
+    handleChapter(id, name) {
+        this.$router.push({ path: '/course/course/chapter', query: { courseId: id, courseName: name }});
+    },
     // 关闭编辑弹窗回调
     closeCllback() {
       this.ctrl.dialogVisible = false;
       this.ctrl.editVisible = false;
+      this.ctrl.addDialogVisible = false
       this.reload()
     },
     // 修改上下架状态
@@ -234,7 +273,7 @@ export default {
     // 请求更新上下架方法
     changeIsPutaway(row, command) {
       this.ctrl.load = true
-      api.courseUpdate({ id: row.id, isPutaway: command }).then(res => {
+      api.courseAuditUpdate({ id: row.id, isPutaway: command }).then(res => {
         this.ctrl.load = false
         const msg = { 0: '下架成功', 1: '上架成功' }
         this.$message({
@@ -263,7 +302,7 @@ export default {
     // 请求更新状态方法
     changeStatusId(row, command) {
       this.ctrl.load = true
-      api.courseUpdate({ id: row.id, statusId: command }).then(res => {
+      api.courseAuditUpdate({ id: row.id, statusId: command }).then(res => {
         this.ctrl.load = false
         const msg = { 0: '禁用成功', 1: '启用成功' }
         this.$message({
