@@ -28,14 +28,14 @@ export function uploadVideo(data = {}) {
   })
 }
 
-// 下载图片
-// export function downPic(params) {
-//   return request({
-//     url: `/course/pc/api/down/show`,
-//     method: 'post',
-//     data: params
-//   })
-// }
+//删除文件
+export function deleteFile(data = {}) {
+  return request({
+    url: `/course/pc/api/upload/delete`,
+    method: 'post',
+    data: data
+  })
+}
 
 // 列出用户菜单
 export function menuUserList(params) {

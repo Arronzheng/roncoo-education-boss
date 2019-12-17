@@ -63,7 +63,7 @@ export default {
           }
           this.formData.auditStatus = this.auditStatus
           this.loading.show()
-          api.courseAudit(this.formData).then(res => {
+          api.courseAuditAudit(this.formData).then(res => {
             this.loading.hide()
             if (res.code === 200 && res.data > 0) {
               // 提交成功, 关闭窗口, 刷新列表

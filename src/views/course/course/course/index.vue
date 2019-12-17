@@ -164,17 +164,16 @@ export default {
         totalCount: 0,
         totalPage: 0
       },
-      textIsFree: {
-        1: '免费',
-        0: '收费'
-      },
-      textStatusId: {
-        1: '正常',
-        0: '禁用'
-      },
+      // textIsFree: {
+      //   1: '免费',
+      //   0: '收费'
+      // },
+      // textStatusId: {
+      //   1: '正常',
+      //   0: '禁用'
+      // },
       options: [],
-      lecturerOptions: [],
-      isDelete: true
+      lecturerOptions: []
     }
   },
   mounted() {

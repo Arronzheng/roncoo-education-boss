@@ -17,18 +17,18 @@
           <el-radio :label="1">免费</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-row  v-if="formData.isFree == 0" prop="periodOriginal">
-        <el-col :span="12">
-          <el-form-item label="原价：" prop="periodOriginal">
-            <el-input type="text" style="width: 120px" placeholder="请输入价格" v-model="formData.periodOriginal"></el-input> 元
-          </el-form-item>
-        </el-col>
+<!--      <el-row  v-if="formData.isFree == 0" prop="periodOriginal">-->
+<!--        <el-col :span="12">-->
+<!--          <el-form-item label="原价：" prop="periodOriginal">-->
+<!--            <el-input type="text" style="width: 120px" placeholder="请输入价格" v-model="formData.periodOriginal"></el-input> 元-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
         <!-- <el-col :span="12">
           <el-form-item label="优惠价：">
             <el-input type="text" style="width: 120px" placeholder="请输入价格" v-model="formData.courseDiscount"></el-input> 元
           </el-form-item>
         </el-col> -->
-      </el-row>
+<!--      </el-row>-->
       <el-form-item label="课件上传：">
       <el-upload
         class="upload-demo"
@@ -52,7 +52,7 @@
           :http-request="handleVideoPost">
           <div class="img" v-if="videoUpload.isUploadSuccess">
             <i class="el-icon-video-camera color-green" :title="111" style="font-size: 120px;"></i><br>
-            <a href="javascript:" :title="111">{{videoUpload.videoName}}</a>
+            <a href="javascript:">{{videoUpload.videoName}}</a>
           </div>
           <i v-else  class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -123,6 +123,10 @@
             title: {
                 type: String,
                 default: ''
+            },
+            isEditDialog: {
+                type: Boolean,
+                default: false
             }
         },
         watch: {
@@ -130,13 +134,18 @@
                 if (val) {
                     setTimeout(() => {
                         //回显视频和文档
-                        console.log(this.formData.isVideo)
                         if (this.formData.isDoc === 1) {
                             this.fileList.splice(0, 1, { name: this.formData.docName })
+                            if (this.isEditDialog) {
+                              this.lastFileUrl = this.formData.docUrl
+                            }
                         }
                         if (this.formData.isVideo === '1') {
                           this.videoUpload.isUploadSuccess = this.formData.isVideo
                           this.videoUpload.videoName = this.formData.videoName
+                            if (this.isEditDialog) {
+                                this.lastVideoUrl = this.formData.videoUrl
+                            }
                         }
                     }, 100)
                 }
@@ -154,7 +163,21 @@
                 this.fileList = []
                 this.videoUpload.isUploadSuccess = false
                 this.videoUpload.videoName = ''
+                if (!this.isEditDialog && (this.lastVideoUrl !== '' || this.lastFileUrl !== '')) {
+                    this.loading.show()
+                    apia.deleteFile({ videoFileUrl: this.lastVideoUrl, docFileUrl: this.lastFileUrl }).then(response => {
+                        this.loading.hide()
+                    }).catch(() => {
+                        this.$message({
+                            showClose: true,
+                            message: '出现错误!',
+                            type: 'error'
+                        });
+                        this.loading.hide()
+                    })
+                }
                 this.lastVideoUrl = ''
+                this.lastFileUrl = ''
                 this.$emit('close-callback')
             },
             submitForm(formName) {
@@ -173,18 +196,18 @@
                         });
                         return false
                     }
-                    if (parseInt(this.formData.isFree) !== 1) {
-                        if (!this.formData.periodOriginal) {
-                            this.$alert('请输入课时售价')
-                            return false;
-                        }
-                        if (this.formData.periodOriginal <= 0) {
-                            this.$alert('请输入正确的课时售价')
-                            return false;
-                        }
-                    } else {
-                        this.formData.periodOriginal = 0;
-                    }
+                    // if (parseInt(this.formData.isFree) !== 1) {
+                    //     if (!this.formData.periodOriginal) {
+                    //         this.$alert('请输入课时售价')
+                    //         return false;
+                    //     }
+                    //     if (this.formData.periodOriginal <= 0) {
+                    //         this.$alert('请输入正确的课时售价')
+                    //         return false;
+                    //     }
+                    // } else {
+                    // }
+                    this.formData.periodOriginal = 0;
                     if (!this.formData.sort) {
                         this.$message({
                             type: 'error',
@@ -204,7 +227,6 @@
                     }
                 }
                 this.loading.show()
-                console.log(this.formData)
                 if (this.formData.id === undefined) {
                     this.formData.chapterId = this.chapterId
                     this.formData.courseId = this.courseId
@@ -214,6 +236,8 @@
                       if (res.code === 200 && res.data > 0) {
                           // 提交成功, 关闭窗口, 刷新列表
                           this.tips('添加成功', 'success')
+                          this.lastVideoUrl = ''
+                          this.lastFileUrl = ''
                           this.handleClose('close-callback')
                           this.formData = {}
                       } else {
@@ -224,6 +248,11 @@
                           });
                       }
                   }).catch(() => {
+                      this.$message({
+                          showClose: true,
+                          message: '提交失败',
+                          type: 'error'
+                      });
                       this.loading.hide()
                   })
                 } else {
@@ -232,6 +261,8 @@
                         if (res.code === 200 && res.data > 0) {
                             // 提交成功, 关闭窗口, 刷新列表
                             this.tips('修改成功', 'success')
+                            this.lastVideoUrl = ''
+                            this.lastFileUrl = ''
                             this.handleClose('close-callback')
                             // this.formData = {}
                         } else {

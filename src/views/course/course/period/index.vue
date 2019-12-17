@@ -64,7 +64,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="page.totalCount">
         </el-pagination>
-        <edit :visible="ctrl.dialogVisible" :formData="formData" :chapterId="chapterId" :courseId="courseId" :title="ctrl.dialogTitle" @close-callback="closeCallback"></edit>
+        <edit :visible="ctrl.dialogVisible" :isEditDialog="ctrl.isEditDialog" :formData="formData" :chapterId="chapterId" :courseId="courseId" :title="ctrl.dialogTitle" @close-callback="closeCallback"></edit>
         <tags-view ref="myChild" v-show="false"></tags-view>
       </div>
     </div>
@@ -82,6 +82,7 @@
             return {
                 ctrl: {
                     loading: false,
+                    isEditDialog: false, //是否修改框
                     dialogVisible: false
                 },
                 map: {}, //查询条件
@@ -167,14 +168,15 @@
             },
             //修改
             handleUpdateRow(data) {
-                console.log(data);
                 this.formData = data
+                this.ctrl.isEditDialog = true
                 this.ctrl.dialogTitle = this.chapterName + '——编辑'
                 this.ctrl.dialogVisible = true
             },
             //新增
             handleAddRow() {
                 this.formData = { sort: 1, isFree: 0 }
+                this.ctrl.isEditDialog = false
                 this.ctrl.dialogTitle = this.chapterName + '——新增'
                 this.ctrl.dialogVisible = true
             },

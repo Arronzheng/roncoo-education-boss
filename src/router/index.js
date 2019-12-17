@@ -184,6 +184,19 @@ export const asyncRouterMap = [
       }
     ]
   },
+  // 评论管理
+  {
+    path: 'comment',
+    component: () => import('@/views/comment'),
+    children: [
+      // 评论列表
+      {
+        path: 'comment',
+        component: () => import('@/views/comment/comment'),
+        meta: { requireAuth: true }
+      }
+    ]
+  },
   //系统管理
   {
     path: 'sys',

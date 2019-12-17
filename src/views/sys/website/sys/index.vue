@@ -7,7 +7,7 @@
           <el-form-item label="视频存储平台:">
             <el-radio-group v-model="formData.videoType">
               <el-radio :label="1">保利威视</el-radio>
-              <el-radio :label="0">腾讯</el-radio>
+              <el-radio :label="2">腾讯</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-row>
@@ -68,6 +68,18 @@
                 </el-form-item>
               </div></el-col>
             </el-row>
+          <el-row v-show="formData.fileType === 4">
+            <el-col :span="11"><div>
+              <el-form-item label="短信应用appid:">
+                <el-input style="width:450px;" type="password" v-model="formData.msgAppid" placeholder="请输入短信应用appid"></el-input>
+              </el-form-item>
+            </div></el-col>
+            <el-col :span="11"><div>
+              <el-form-item label="短信应用appkey:">
+                <el-input style="width:450px;" type="password" v-model="formData.msgAppkey" placeholder="请输入短信应用appkey"></el-input>
+              </el-form-item>
+            </div></el-col>
+          </el-row>
             <el-row>
               <el-col :span="11"><div>
                 <el-form-item label="smsCode:">
