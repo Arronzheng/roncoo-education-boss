@@ -29,7 +29,6 @@
        <el-table-column  label="广告图片">
          <template slot-scope="scope">
            <img :src="scope.row.advImg" width="90" height="60"/>
-           <p>{{scope.row.advImg}}</p>
          </template>
         </el-table-column>
         <el-table-column prop="advTitle" label="广告标题/广告链接">

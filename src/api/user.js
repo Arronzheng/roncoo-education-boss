@@ -43,3 +43,12 @@ export function studyLoglist(params, pageCurrent = 1, pageSize = 20) {
     data: { pageCurrent: pageCurrent, pageSize: pageSize, ...params }
   })
 }
+
+// 用户购买会员日志分页列表接口
+export function vipLoglist(params, pageCurrent = 1, pageSize = 20) {
+  return request({
+    url: '/user/pc/svipBuyLog/list',
+    method: 'post',
+    data: { pageCurrent: pageCurrent, pageSize: pageSize, ...params }
+  })
+}

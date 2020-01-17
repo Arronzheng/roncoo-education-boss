@@ -84,7 +84,9 @@
   export default {
     data() {
       return {
-        map: {},
+        map: {
+            auditStatus: 1
+        },
         list: [],
         ctrl: {
           load: false

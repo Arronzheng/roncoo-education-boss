@@ -181,6 +181,12 @@ export const asyncRouterMap = [
         path: 'studyLog',
         meta: { title: '学习日志' },
         component: () => import('@/views/user/studyLog')
+      },
+      {
+        // 用户购买会员日志列表
+        path: 'vipLog',
+        meta: { title: '购买会员日志' },
+        component: () => import('@/views/user/vipLog')
       }
     ]
   },

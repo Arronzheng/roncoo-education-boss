@@ -18,6 +18,16 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="会员：" >
+        <el-select v-model="map.isVip" class="auto-width" clearable filterable placeholder="是否会员" style="width: 85px">
+          <el-option
+            v-for="item in opts.isVipList"
+            :key="item.code"
+            :label="item.desc"
+            :value="item.code">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="注册时间：">
         <div>
           <datePicker v-model="gmtCreate" ref="dataRange" :newVal='gmtCreate' type="daterange"></datePicker>
@@ -70,17 +80,36 @@
             </el-switch>
           </template>
         </el-table-column>
+        <el-table-column
+          label="是否会员"
+          prop="isVip"
+          align="center"
+          width="200">
+          <template slot-scope="sett">
+            <el-tag v-if="sett.row.vip !== null && sett.row.vip !== ''" type="success">是</el-tag>
+            <el-tag v-else type="brandColor">否</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="vip.dueTime"
+          label="会员到期时间">
+          <template slot-scope="vip">
+            <span v-if="vip.row.vip === null || vip.row.vip === ''">-</span>
+            <span v-else>{{vip.row.vip.dueTime}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="gmtCreate" label="注册时间">
         </el-table-column>
         <el-table-column
         fixed="right"
         label="操作"
-        width="200">
+        width="310">
         <template slot-scope="scope">
           <ul class="list-item-actions">
             <li>
               <el-button v-has="'/user/pc/user/ext/view'" type="success" @click="handleEdit(scope.row.id)" size="mini">编辑</el-button>
               <el-button v-has="'/course/pc/course/user/study/log/list'" type="primary" @click="handleStudy(scope.row.userNo)" size="mini">学习记录</el-button>
+              <el-button v-has="'/user/pc/svipBuyLog/list'" type="primary" @click="handleVip(scope.row.userNo)" size="mini">购买会员记录</el-button>
             </li>
           </ul>
         </template>
@@ -113,7 +142,7 @@
         list: [],
         map: {},
         formData: {},
-        gmtCreate: '',
+        gmtCreate: [],
         userNo: '',
         ctrl: {
           load: false,
@@ -123,7 +152,8 @@
           studyVisible: false
         },
         opts: {
-          statusIdList: []
+          statusIdList: [],
+          isVipList: []
         },
         page: {
           beginPageIndex: 1,
@@ -151,11 +181,17 @@
       this.$store.dispatch('GetOpts', { enumName: "StatusIdEnum", type: 'arr' }).then(res => {
         this.opts.statusIdList = res
       })
+      this.$store.dispatch('GetOpts', { enumName: "IsVipEnum", type: 'arr' }).then(res => {
+          this.opts.isVipList = res
+      })
       this.userExtList(1)
     },
     methods: {
       handleStudy(row) {
         this.$router.push({ path: '/user/studyLog', query: { userNo: row }});
+      },
+      handleVip(row) {
+        this.$router.push({ path: '/user/vipLog', query: { userNo: row }});
       },
       // 跳修改弹窗页面
       handleEdit(id) {

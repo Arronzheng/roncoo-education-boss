@@ -47,6 +47,23 @@
               </el-form-item>
             </div></el-col>
           </el-row>
+        <el-alert class="title" :closable="false" title="vip会员" type="info" />
+        <br/>
+        <el-row>
+          <el-col :span="5"><div>
+            <el-form-item label="vip设置:">
+              <el-radio-group v-model="formData.isEnableVip">
+                <el-radio :label="1">开启</el-radio>
+                <el-radio :label="0">关闭</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </div></el-col>
+          <el-col :span="8"><div>
+            <el-form-item label="会员价格:">
+              <el-input v-model="formData.vipPrice" placeholder="请输入会员价格"></el-input>
+            </el-form-item>
+          </div></el-col>
+        </el-row>
         <el-alert class="title" :closable="false" title="统计信息" type="info" />
           <br/>
           <el-form-item label="统计设置:">

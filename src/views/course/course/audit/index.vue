@@ -75,9 +75,37 @@
           <el-tag v-if="scope.row.isFree === 0" type="danger">收费</el-tag>
         </template>
       </el-table-column>
+      <el-table-column
+        label="是否vip收费"
+        prop="isVipFree"
+        align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.isVipFree === 1" type="success">免费</el-tag>
+          <el-tag v-if="scope.row.isVipFree === 0" type="danger">收费</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="是否限vip购买"
+        prop="isOnlyVipBuy"
+        align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.isOnlyVipBuy === 1" type="success">是</el-tag>
+          <el-tag v-if="scope.row.isOnlyVipBuy === 0" type="danger">否</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="原价" width="100">
         <template slot-scope="scope">
           {{scope.row.courseOriginal.toFixed(2)}}
+        </template>
+      </el-table-column>
+      <el-table-column label="会员价" width="100">
+        <template slot-scope="scope">
+          {{scope.row.courseSvipDiscount.toFixed(2)}}
+        </template>
+      </el-table-column>
+      <el-table-column label="拼团价" width="100">
+        <template slot-scope="scope">
+          {{scope.row.courseAssembleDiscount.toFixed(2)}}
         </template>
       </el-table-column>
       <el-table-column

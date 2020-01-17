@@ -73,8 +73,10 @@ reset：重置functionn(int, langth) //int：当前日期往前推第int天，la
         default: false
       },
       newVal: {
-        type: String,
-        default: 'daterange'
+        type: Array,
+        default: () => {
+            return []
+        }
       }
     },
     model: {

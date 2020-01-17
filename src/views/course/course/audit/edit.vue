@@ -29,17 +29,35 @@
           <el-radio :label="1">免费</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-row v-if="formData.isFree == 0">
-        <el-col :span="12">
-          <el-form-item label="原价：">
-            <el-input type="text" style="width: 120px" placeholder="请输入价格" v-model="formData.courseOriginal"></el-input> 元
-          </el-form-item>
-        </el-col>
+      <el-row  v-if="formData.isFree == 0">
+        <el-form-item label="原价：">
+          <el-input type="text" style="width: 120px" placeholder="请输入原价" v-model="formData.courseOriginal"></el-input> 元
+        </el-form-item>
+        <el-form-item label="拼团价：">
+          <el-input type="text" style="width: 120px" placeholder="请输入拼团价" v-model="formData.courseAssembleDiscount"></el-input> 元
+        </el-form-item>
         <!-- <el-col :span="12">
           <el-form-item label="优惠价：">
             <el-input type="text" style="width: 120px" placeholder="请输入价格" v-model="formData.courseDiscount"></el-input> 元
           </el-form-item>
         </el-col> -->
+        <el-form-item label="VIP免费：">
+          <el-radio-group v-model="formData.isVipFree">
+            <el-radio :label="0">收费</el-radio>
+            <el-radio :label="1">免费</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-row  v-if="formData.isVipFree == 0">
+          <el-form-item label="限VIP购买：">
+            <el-radio-group v-model="formData.isOnlyVipBuy">
+              <el-radio :label="0">否</el-radio>
+              <el-radio :label="1">是</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="会员价：">
+            <el-input type="text" style="width: 120px" placeholder="请输入会员价" v-model="formData.courseSvipDiscount"></el-input> 元
+          </el-form-item>
+        </el-row>
       </el-row>
       <el-form-item label="排序：">
         <el-input-number style="width: 300px;" v-model="formData.sort" @change="handleChange" :min="1"></el-input-number>
@@ -106,18 +124,44 @@ export default {
       this.formData.sort = value
     },
     submitForm(formData) {
-      if (parseInt(this.formData.isFree) !== 1) {
-        if (!this.formData.courseOriginal) {
-          this.$alert('请输入课程原价')
-          return false;
+        if (parseInt(this.formData.isFree) !== 1) {
+            console.log(this.formData.courseOriginal)
+            if (this.formData.courseOriginal === "") {
+                this.$alert('请输入课程售价')
+                return false;
+            }
+            if (this.formData.courseOriginal <= 0) {
+                this.$alert('请输入正确的课程售价')
+                return false;
+            }
+            if (this.formData.courseAssembleDiscount === "") {
+                this.$alert('请输入课程拼团价')
+                return false;
+            }
+            if (this.formData.courseAssembleDiscount < 0) {
+                this.$alert('请输入正确的课程拼团价')
+                return false;
+            }
+        } else {
+            this.formData.courseOriginal = 0;
+            this.formData.courseAssembleDiscount = 0;
+            this.formData.isVipFree = 1
+            this.formData.isOnlyVipBuy = 0
+            this.formData.courseSvipDiscount = 0;
         }
-        if (this.formData.courseOriginal <= 0) {
-          this.$alert('请输入正确的课程原价')
-          return false;
+        if (parseInt(this.formData.isVipFree) !== 1) {
+            if (!this.formData.courseSvipDiscount) {
+                this.$alert('请输入课程会员价')
+                return false;
+            }
+            if (this.formData.courseSvipDiscount <= 0) {
+                this.$alert('请输入正确的课程会员价')
+                return false;
+            }
+        } else {
+            this.formData.isOnlyVipBuy = 0
+            this.formData.courseSvipDiscount = 0;
         }
-      } else {
-        this.formData.courseOriginal = 0;
-      }
       this.$refs[formData].validate((valid) => {
         if (valid) {
           if (this.formData.id === undefined) {
